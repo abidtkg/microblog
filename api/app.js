@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocs = require('./configs/swagger.config');
 require('dotenv').config();
 
 // JSON ONLY DEFINED
@@ -17,6 +19,7 @@ const postRoutes = require('./routes/post');
 const profileRoutes = require('./routes/profile');
 
 // USE ROUTES TO EXECUTE
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/', homeRoutes)
 app.use('/auth', authRoutes);
 app.use('/post', postRoutes);
@@ -30,4 +33,4 @@ mongoose.connection
 });
 
 // PORT TO LISTEN
-app.listen(80);
+app.listen(process.env.PORT);

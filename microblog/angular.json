@@ -124,6 +124,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "microblog"
+    }
+  },
+  "defaultProject": "microblog",
+  "cli": {
+    "analytics": "e4c7366f-105b-4136-b098-f8ec49ab34cb"
+  }
 }

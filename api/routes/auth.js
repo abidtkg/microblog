@@ -5,7 +5,44 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { regiserValidation, loginValidation } = require('../configs/datavalidation');
 require('dotenv').config();
-// CREATE NEW USER
+
+
+/**
+* @swagger
+*   /auth/create:
+*   post:
+*       description: create a new account
+*       summary: 
+*       tags:
+*           - Authentication
+*       responses:
+*           '200':
+*               description: create a new account & this will response a JWT auth token.
+*               schema:
+*                 type: object
+*                 properties:
+*                   name:
+*                       type: string
+*           '400':
+*               description: new account error information
+*               schema:
+*                   type: object
+*                   properties:
+*                       message:
+*                           type: string
+*       parameters:
+*         - in: body
+*           name: acc info
+*           schema:
+*              type: object
+*              properties:
+*                  name:
+*                      type: string
+*                  email:
+*                      type: string
+*                  password:
+*                      type: string
+*/
 router.post('/create', async (req, res) => {
     // VALIDATE DATA
     const {error} = regiserValidation(req.body);
@@ -24,15 +61,41 @@ router.post('/create', async (req, res) => {
 
     try{
         const savedUser = await user.save();
-        const token = jwt.sign({_id: user._id});
-        res.header('auth-token', process.env.TOKEN_SECRET).json(token);
+        const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
+        res.header('auth-token', token).json({"token": token});
         
     }catch(error){
         res.status(400).json({message: error});
     }
 });
 
-// LOGIN A USER
+
+/**
+* @swagger
+*   /auth/login:
+*   post:
+*       description: authorize account
+*       summary: 
+*       tags:
+*           - Authentication
+*       responses:
+*           '200':
+*               description: Login to account and it will give JWT auth token
+*               schema:
+*                 type: string
+*       parameters:
+*         - in: body
+*           name: auth info
+*           schema:
+*              type: object
+*              properties:
+*                  email:
+*                      type: string
+*                      required: true
+*                  password:
+*                      type: string
+*                      required: true
+*/
 router.post('/login', async (req, res) => {
     // VALIDATE THE DATA
     const { error } = loginValidation(req.body);
@@ -47,4 +110,5 @@ router.post('/login', async (req, res) => {
     token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
     res.header('auth-token', token).json(token);
 });
+
 module.exports = router;

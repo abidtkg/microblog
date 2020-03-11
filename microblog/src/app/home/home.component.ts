@@ -9,7 +9,7 @@ import { HttpClient } from "@angular/common/http";
 export class HomeComponent implements OnInit {
 
   constructor(private http: HttpClient,) { }
-  private baseUrl = "http://localhost";
+  private baseUrl = "http://localhost:3000";
   ngOnInit() {
   }
   posts = this.http.get(this.baseUrl+"/post/all");
