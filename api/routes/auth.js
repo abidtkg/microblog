@@ -62,10 +62,9 @@ router.post('/create', async (req, res) => {
     try{
         const savedUser = await user.save();
         const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
-        res.header('auth-token', token).json({"token": token});
-        
+        res.header('token', token).json({token: token});
     }catch(error){
-        res.status(400).json({message: error});
+        res.status(400).json({message: '500 Inernal Server Error', error: error});
     }
 });
 
@@ -108,7 +107,7 @@ router.post('/login', async (req, res) => {
     if(!verifyPassword) return res.status(400).json({message: "password error"});
 
     token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
-    res.header('auth-token', token).json(token);
+    res.header('token', token).json(token);
 });
 
 module.exports = router;
